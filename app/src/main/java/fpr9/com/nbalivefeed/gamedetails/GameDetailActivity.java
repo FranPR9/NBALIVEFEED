@@ -56,7 +56,6 @@ public class GameDetailActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         imghome = getIntent().getStringExtra("imghome");
@@ -75,6 +74,7 @@ public class GameDetailActivity extends AppCompatActivity {
         acrAway = getIntent().getStringExtra("acrAway");
 
         toolbar.setTitle(awayName+"@"+homeName);
+        setSupportActionBar(toolbar);
 
         String gameid = getIntent().getStringExtra("gameid");
         period = getIntent().getIntExtra("period",1);

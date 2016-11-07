@@ -280,6 +280,20 @@ public class DetailFeedFragment extends Fragment implements DetailFeedView {
         super.onCreate(savedInstanceState);
         setInjection();
         presenter.onCreate();
+        if(savedInstanceState!=null){
+            gameid = savedInstanceState.getString("gameid");
+            gameStatus = savedInstanceState.getString("gameStatus");
+            awayName = savedInstanceState.getString("awayName");
+            homeName = savedInstanceState.getString("homeName");
+            awayC = savedInstanceState.getString("awayC");
+            homeC = savedInstanceState.getString("homeC");
+            acrHome = savedInstanceState.getString("acrHome");
+            acrAway = savedInstanceState.getString("acrAway");
+            awayid = savedInstanceState.getString("awayid");
+            homeid = savedInstanceState.getString("homeid");
+            away_img = savedInstanceState.getString("away_img");
+            home_img = savedInstanceState.getString("home_img");
+        }
     }
 
 
@@ -535,10 +549,17 @@ public class DetailFeedFragment extends Fragment implements DetailFeedView {
     @Override
     public void showHomeStats(CommonStats commonStats) {
 
+        String fg = (Double.parseDouble(commonStats.getResultSets().get(0).getRowSet().get(11))*100)+"";
+        String ft = (Double.parseDouble(commonStats.getResultSets().get(0).getRowSet().get(17))*100)+"";
+        String triples = (Double.parseDouble(commonStats.getResultSets().get(0).getRowSet().get(14))*100)+"";
+        if(fg.length()>4)fg = fg.substring(0,4);
+        if(ft.length()>4)ft = ft.substring(0,4);
+        if(triples.length()>4)triples = triples.substring(0,4);
+
         assistsHome.setText(commonStats.getResultSets().get(0).getRowSet().get(21));
-        fgHome.setText(commonStats.getResultSets().get(0).getRowSet().get(11) + "%");
-        freethrowsHome.setText(commonStats.getResultSets().get(0).getRowSet().get(17) + "%");
-        triplesHome.setText(commonStats.getResultSets().get(0).getRowSet().get(14) + "%");
+        fgHome.setText(fg);
+        freethrowsHome.setText(ft);
+        triplesHome.setText(triples);
         reboundsHome.setText(commonStats.getResultSets().get(0).getRowSet().get(20) + "");
         orHome.setText(commonStats.getResultSets().get(0).getRowSet().get(18) + "");
         drebHome.setText(commonStats.getResultSets().get(0).getRowSet().get(19) + "");
@@ -550,10 +571,19 @@ public class DetailFeedFragment extends Fragment implements DetailFeedView {
 
     @Override
     public void showAwayStats(CommonStats commonStats) {
+        String fg = (Double.parseDouble(commonStats.getResultSets().get(0).getRowSet().get(11))*100)+"";
+        String ft = (Double.parseDouble(commonStats.getResultSets().get(0).getRowSet().get(17))*100)+"";
+        String triples = (Double.parseDouble(commonStats.getResultSets().get(0).getRowSet().get(14))*100)+"";
+
+        if(fg.length()>4)fg = fg.substring(0,4);
+        if(ft.length()>4)ft = ft.substring(0,4);
+        if(triples.length()>4)triples = triples.substring(0,4);
+
+
         assistsAway.setText(commonStats.getResultSets().get(0).getRowSet().get(21));
-        fgAway.setText(commonStats.getResultSets().get(0).getRowSet().get(11) + "%");
-        freethrowsAway.setText(commonStats.getResultSets().get(0).getRowSet().get(17) + "%");
-        triplesAway.setText(commonStats.getResultSets().get(0).getRowSet().get(14) + "%");
+        fgAway.setText(fg);
+        freethrowsAway.setText(ft);
+        triplesAway.setText(triples);
         reboundsAway.setText(commonStats.getResultSets().get(0).getRowSet().get(20) + "");
         orAway.setText(commonStats.getResultSets().get(0).getRowSet().get(18) + "");
         drebAway.setText(commonStats.getResultSets().get(0).getRowSet().get(19) + "");
@@ -791,4 +821,22 @@ public class DetailFeedFragment extends Fragment implements DetailFeedView {
 
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+
+        outState.putString("gameid",gameid);
+        outState.putString("gameStatus",gameStatus);
+        outState.putString("awayName",awayName);
+        outState.putString("homeName",homeName);
+        outState.putString("awayC",awayC);
+        outState.putString("homeC",homeC);
+        outState.putString("acrHome",acrHome);
+        outState.putString("acrAway",acrAway);
+        outState.putString("awayid",awayid);
+        outState.putString("homeid",homeid);
+        outState.putString("away_img",away_img);
+        outState.putString("home_img",home_img);
+
+        super.onSaveInstanceState(outState);
+    }
 }
