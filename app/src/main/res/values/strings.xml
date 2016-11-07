@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">NBAlivefeed</string>
+    <string name="action_settings">Settings</string>
+    <string name="retrivingGamesError">Error on getting games :(</string>
+    <string name="title_activity_game_detail">GameDetailActivity</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="assists">Assists</string>
+    <string name="fg">field goals(%)</string>
+    <string name="freethrows">Free Throws (%)</string>
+    <string name="triples">3P(%)</string>
+    <string name="rebounds">Rebounds</string>
+    <string name="ofensive_rebounds">OREB</string>
+    <string name="dreb">DREB</string>
+    <string name="stl">Steals</string>
+    <string name="blks">Blocks</string>
+    <string name="to">Turnovers</string>
+    <string name="fouls">Fouls</string>
+    <string name="serverDetailError">Error on server try later, please</string>
+    <string name="PPG">PPG</string>
+    <string name="RPG">RPG</string>
+    <string name="APG">APG</string>
+    <string name="OPPG">OPPG</string>
+    <string name="points">Points</string>
+    <string name="previousGames">Previous Games:</string>
+    <string name="injuryReport">Injury Report</string>
+    <string name="moneyLine">Money Line</string>
+    <string name="OverUnder">O/U</string>
+    <string name="spreadOdd">Spread</string>
+    <string name="noInjuries">No injuries on this team</string>
+</resources>

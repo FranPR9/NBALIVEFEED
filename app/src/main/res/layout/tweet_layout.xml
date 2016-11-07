@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:twittersdk="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/tweetContainer">
+   <View
+       android:layout_width="match_parent"
+       android:layout_height="1px"
+       android:background="@android:color/darker_gray"
+       android:layout_marginBottom="5dp"
+       ></View>
+   <!-- <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tweet_image"
+        android:visibility="gone"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tweet_text"
+        />-->
+
+    <com.twitter.sdk.android.tweetui.TweetView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tweetView"
+        android:visibility="gone"
+        twittersdk:tw__tweet_id="521061104445693952"
+        ></com.twitter.sdk.android.tweetui.TweetView>
+
+</LinearLayout>

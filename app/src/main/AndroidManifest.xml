@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="fpr9.com.nbalivefeed">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:name=".NBAlivefeedApp"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".gamesindex.ui.GamesIndex"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".gamedetails.GameDetailActivity"
+            android:label="@string/title_activity_game_detail"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="86830785a4639e67ca3f09f33f61ce65d7e31e81" />
+    </application>
+
+</manifest>
