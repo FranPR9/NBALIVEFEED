@@ -33,6 +33,7 @@ public class IndexPresenterImpl implements IndexPresenter{
 
     @Override
     public void getScores() {
+        view.showProgress();
         interactor.executeScores();
     }
 
