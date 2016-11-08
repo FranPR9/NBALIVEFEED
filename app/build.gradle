@@ -40,6 +40,8 @@ android {
             buildConfigField "String", "pre_game", pre_game
             buildConfigField "String", "img_url", img_url
             buildConfigField "String", "player_url", player_url
+            buildConfigField "String", "TWITTER_KEY", TWITTER_KEY
+            buildConfigField "String", "TWITTER_SECRET", TWITTER_SECRET
         }
         debug{
             buildConfigField "String", "base_url", BASE_URL
@@ -51,6 +53,8 @@ android {
             buildConfigField "String", "pre_game", pre_game
             buildConfigField "String", "img_url", img_url
             buildConfigField "String", "player_url", player_url
+            buildConfigField "String", "TWITTER_KEY", TWITTER_KEY
+            buildConfigField "String", "TWITTER_SECRET", TWITTER_SECRET
         }
     }
 }
