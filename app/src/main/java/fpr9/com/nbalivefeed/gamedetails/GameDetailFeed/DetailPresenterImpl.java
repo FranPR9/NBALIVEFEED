@@ -1,5 +1,7 @@
 package fpr9.com.nbalivefeed.gamedetails.GameDetailFeed;
 
+import android.util.Log;
+
 import org.greenrobot.eventbus.Subscribe;
 
 import java.text.ParseException;
@@ -20,6 +22,7 @@ import fpr9.com.nbalivefeed.lib.EventBus;
  */
 public class DetailPresenterImpl implements DetailPresenter {
 
+    private static final String TAG = "DetailPresenter";
     EventBus eventBus;
     DetailFeedView view;
     DetailInteractor interactor;
@@ -55,6 +58,8 @@ public class DetailPresenterImpl implements DetailPresenter {
     @Override
     @Subscribe
     public void GameInfoRespond(DetailEvent event) {
+        view.hideRefresh();
+        Log.d(TAG,"type:"+event.getType());
         if (event.isSuccess()) {
             switch (event.getType()) {
                 case DetailEvent.STATS_TYPE:

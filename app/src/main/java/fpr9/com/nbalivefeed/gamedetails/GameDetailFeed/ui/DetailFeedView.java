@@ -58,4 +58,6 @@ public interface DetailFeedView {
     void showOdds(List<Odd> odds);
 
     void showPreGame(Pregame pregame);
+
+    void hideRefresh();
 }

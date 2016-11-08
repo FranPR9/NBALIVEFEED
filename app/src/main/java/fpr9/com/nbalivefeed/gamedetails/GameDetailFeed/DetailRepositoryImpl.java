@@ -48,7 +48,6 @@ public class DetailRepositoryImpl implements DetailRepository {
         String ts = tsLong.toString();
         Log.d(TAG,"ts:"+ts);
         Call<StatsResponse> call = statsService.getScores(base_url+gameid+".js",ts);
-        Log.d(TAG,call.request().url().toString());
         call.enqueue(new Callback<StatsResponse>() {
             @Override
             public void onResponse(Call<StatsResponse> call, Response<StatsResponse> response) {

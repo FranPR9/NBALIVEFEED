@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,7 +18,6 @@ import android.widget.TextView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import dagger.Component;
 import fpr9.com.nbalivefeed.NBAlivefeedApp;
 import fpr9.com.nbalivefeed.R;
 import fpr9.com.nbalivefeed.entities.Game;
@@ -28,7 +28,7 @@ import fpr9.com.nbalivefeed.gamesindex.di.IndexComponent;
 import fpr9.com.nbalivefeed.gamesindex.ui.adapter.GamesAdapter;
 import fpr9.com.nbalivefeed.gamesindex.ui.adapter.OnGameListener;
 
-public class GamesIndex extends AppCompatActivity implements IndexView,OnGameListener {
+public class GamesIndex extends AppCompatActivity implements IndexView, OnGameListener, SwipeRefreshLayout.OnRefreshListener {
 
     private static final String TAG = "GamesIndex";
     @Bind(R.id.toolbar)
@@ -44,6 +44,8 @@ public class GamesIndex extends AppCompatActivity implements IndexView,OnGameLis
 
     IndexPresenter presenter;
     GamesAdapter adapter;
+    @Bind(R.id.swipeContainerIndex)
+    SwipeRefreshLayout swipeContainerIndex;
 
 
     @Override
@@ -63,13 +65,14 @@ public class GamesIndex extends AppCompatActivity implements IndexView,OnGameLis
             }
         });*/
         setInjection();
+        swipeContainerIndex.setOnRefreshListener(this);
         presenter.onCreate();
         presenter.getScores();
         setRecycler();
     }
 
     private void setInjection() {
-        IndexComponent component = ((NBAlivefeedApp)getApplication()).getIndexComponent(this,this,this);
+        IndexComponent component = ((NBAlivefeedApp) getApplication()).getIndexComponent(this, this, this);
         presenter = component.getIndexPresenter();
         adapter = component.getGamesAdapter();
     }
@@ -113,18 +116,19 @@ public class GamesIndex extends AppCompatActivity implements IndexView,OnGameLis
 
     @Override
     public void showGames(GameScore gameScore) {
+        swipeContainerIndex.setRefreshing(false);
         gamesDate.setText(gameScore.getDate());
         adapter.setGames(gameScore.getGames());
     }
 
     @Override
     public void gamesRetriveError() {
-        Snackbar.make(indexCoordinator,getString(R.string.retrivingGamesError),Snackbar.LENGTH_SHORT);
+        Snackbar.make(indexCoordinator, getString(R.string.retrivingGamesError), Snackbar.LENGTH_SHORT);
     }
 
     @Override
     public void localGamesError() {
-        Snackbar.make(indexCoordinator,getString(R.string.retrivingGamesError),Snackbar.LENGTH_SHORT);
+        Snackbar.make(indexCoordinator, getString(R.string.retrivingGamesError), Snackbar.LENGTH_SHORT);
     }
 
     @Override
@@ -152,23 +156,33 @@ public class GamesIndex extends AppCompatActivity implements IndexView,OnGameLis
             imgAway = "no";
         }
         */
-        Log.d(TAG,"homeimg:"+imgHome+" awayimg:"+imgAway);
-        i.putExtra("imghome",imgHome);
-        i.putExtra("imgaway",imgAway);
-        i.putExtra("acrHome",game.getLocal().getAcronym());
-        i.putExtra("acrAway",game.getVisitor().getAcronym());
-        i.putExtra("gameid",game.getId());
-        i.putExtra("period",game.getPeriod());
-        i.putExtra("homeA",game.getLocal().getAcronym());
-        i.putExtra("awayA",game.getVisitor().getAcronym());
-        i.putExtra("homeName",game.getLocal().getName());
-        i.putExtra("awayName",game.getVisitor().getName());
-        i.putExtra("homeC",game.getLocal().getCity());
-        i.putExtra("awayC",game.getVisitor().getCity());
-        i.putExtra("status",game.getState()+"");
-        i.putExtra("homeid",game.getLocal().getId());
-        i.putExtra("awayid",game.getVisitor().getId());
+        i.putExtra("imghome", imgHome);
+        i.putExtra("imgaway", imgAway);
+        i.putExtra("acrHome", game.getLocal().getAcronym());
+        i.putExtra("acrAway", game.getVisitor().getAcronym());
+        i.putExtra("gameid", game.getId());
+        i.putExtra("period", game.getPeriod());
+        i.putExtra("homeA", game.getLocal().getAcronym());
+        i.putExtra("awayA", game.getVisitor().getAcronym());
+        i.putExtra("homeName", game.getLocal().getName());
+        i.putExtra("awayName", game.getVisitor().getName());
+        i.putExtra("homeC", game.getLocal().getCity());
+        i.putExtra("awayC", game.getVisitor().getCity());
+        i.putExtra("status", game.getState() + "");
+        i.putExtra("homeid", game.getLocal().getId());
+        i.putExtra("awayid", game.getVisitor().getId());
 
         startActivity(i);
+    }
+
+    @Override
+    protected void onRestart() {
+        presenter.getScores();
+        super.onRestart();
+    }
+
+    @Override
+    public void onRefresh() {
+        presenter.getScores();
     }
 }

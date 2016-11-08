@@ -4,6 +4,7 @@ package fpr9.com.nbalivefeed.gamedetails.GameDetailFeed.ui;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -33,7 +34,6 @@ import fpr9.com.nbalivefeed.R;
 import fpr9.com.nbalivefeed.entities.CommonStats;
 import fpr9.com.nbalivefeed.entities.Game;
 import fpr9.com.nbalivefeed.entities.Odd;
-import fpr9.com.nbalivefeed.entities.Play;
 import fpr9.com.nbalivefeed.entities.Player;
 import fpr9.com.nbalivefeed.entities.PlaysResponse;
 import fpr9.com.nbalivefeed.entities.Pregame;
@@ -47,10 +47,11 @@ import fpr9.com.nbalivefeed.gamedetails.GameDetailFeed.ui.adapter.PlaysAdapter;
 import fpr9.com.nbalivefeed.gamesindex.ui.adapter.GamesAdapter;
 import fpr9.com.nbalivefeed.lib.ImageLoader;
 
+
 /**
  * Created by FranciscoPR on 29/10/16.
  */
-public class DetailFeedFragment extends Fragment implements DetailFeedView {
+public class DetailFeedFragment extends Fragment implements DetailFeedView, SwipeRefreshLayout.OnRefreshListener {
 
 
     private static final String TAG = "DetailFeedFragment";
@@ -165,6 +166,8 @@ public class DetailFeedFragment extends Fragment implements DetailFeedView {
     CardView oddContainer;
     @Bind(R.id.injuryText)
     TextView injuryText;
+    @Bind(R.id.swipeDetails)
+    SwipeRefreshLayout swipeDetails;
 
     private String imgUrl = BuildConfig.player_url;
 
@@ -280,7 +283,7 @@ public class DetailFeedFragment extends Fragment implements DetailFeedView {
         super.onCreate(savedInstanceState);
         setInjection();
         presenter.onCreate();
-        if(savedInstanceState!=null){
+        if (savedInstanceState != null) {
             gameid = savedInstanceState.getString("gameid");
             gameStatus = savedInstanceState.getString("gameStatus");
             awayName = savedInstanceState.getString("awayName");
@@ -314,6 +317,15 @@ public class DetailFeedFragment extends Fragment implements DetailFeedView {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_game_detail, container, false);
         Log.d(TAG, "status:" + gameStatus);
+
+        getInfo();
+
+        ButterKnife.bind(this, rootView);
+        return rootView;
+    }
+
+    private void getInfo() {
+
         if (!gameStatus.equals("1")) {
             presenter.getGameStats(gameid);
             presenter.getPlaybyPlay(gameid);
@@ -329,14 +341,13 @@ public class DetailFeedFragment extends Fragment implements DetailFeedView {
             presenter.getRecord(gameid);
         }
 
-
-        ButterKnife.bind(this, rootView);
-        return rootView;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        swipeDetails.setOnRefreshListener(this);
+
         playbyplay.setLayoutManager(new LinearLayoutManager(getActivity()));
         playbyplay.setAdapter(playsAdapter);
 
@@ -549,12 +560,12 @@ public class DetailFeedFragment extends Fragment implements DetailFeedView {
     @Override
     public void showHomeStats(CommonStats commonStats) {
 
-        String fg = (Double.parseDouble(commonStats.getResultSets().get(0).getRowSet().get(11))*100)+"";
-        String ft = (Double.parseDouble(commonStats.getResultSets().get(0).getRowSet().get(17))*100)+"";
-        String triples = (Double.parseDouble(commonStats.getResultSets().get(0).getRowSet().get(14))*100)+"";
-        if(fg.length()>4)fg = fg.substring(0,4);
-        if(ft.length()>4)ft = ft.substring(0,4);
-        if(triples.length()>4)triples = triples.substring(0,4);
+        String fg = (Double.parseDouble(commonStats.getResultSets().get(0).getRowSet().get(11)) * 100) + "";
+        String ft = (Double.parseDouble(commonStats.getResultSets().get(0).getRowSet().get(17)) * 100) + "";
+        String triples = (Double.parseDouble(commonStats.getResultSets().get(0).getRowSet().get(14)) * 100) + "";
+        if (fg.length() > 4) fg = fg.substring(0, 4);
+        if (ft.length() > 4) ft = ft.substring(0, 4);
+        if (triples.length() > 4) triples = triples.substring(0, 4);
 
         assistsHome.setText(commonStats.getResultSets().get(0).getRowSet().get(21));
         fgHome.setText(fg);
@@ -571,13 +582,13 @@ public class DetailFeedFragment extends Fragment implements DetailFeedView {
 
     @Override
     public void showAwayStats(CommonStats commonStats) {
-        String fg = (Double.parseDouble(commonStats.getResultSets().get(0).getRowSet().get(11))*100)+"";
-        String ft = (Double.parseDouble(commonStats.getResultSets().get(0).getRowSet().get(17))*100)+"";
-        String triples = (Double.parseDouble(commonStats.getResultSets().get(0).getRowSet().get(14))*100)+"";
+        String fg = (Double.parseDouble(commonStats.getResultSets().get(0).getRowSet().get(11)) * 100) + "";
+        String ft = (Double.parseDouble(commonStats.getResultSets().get(0).getRowSet().get(17)) * 100) + "";
+        String triples = (Double.parseDouble(commonStats.getResultSets().get(0).getRowSet().get(14)) * 100) + "";
 
-        if(fg.length()>4)fg = fg.substring(0,4);
-        if(ft.length()>4)ft = ft.substring(0,4);
-        if(triples.length()>4)triples = triples.substring(0,4);
+        if (fg.length() > 4) fg = fg.substring(0, 4);
+        if (ft.length() > 4) ft = ft.substring(0, 4);
+        if (triples.length() > 4) triples = triples.substring(0, 4);
 
 
         assistsAway.setText(commonStats.getResultSets().get(0).getRowSet().get(21));
@@ -615,6 +626,7 @@ public class DetailFeedFragment extends Fragment implements DetailFeedView {
         blksLeaderHome.setText(teamLeaders.get(4).getBLK() + "");
         nameBlksHome.setText(teamLeaders.get(4).getPLAYER_NAME());
         imageLoader.load(imgBlksHome, imgUrl + teamLeaders.get(4).getPLAYER_ID() + ".png");
+
 
     }
 
@@ -706,7 +718,7 @@ public class DetailFeedFragment extends Fragment implements DetailFeedView {
     public void showInjuryReportHome(List<String> injuries) {
         homeInjuryName.setText(homeName);
         injuryHomeTitlesContainer.setVisibility(View.VISIBLE);
-        if(injuries.size()<=0)injuries.add(getString(R.string.noInjuries));
+        if (injuries.size() <= 0) injuries.add(getString(R.string.noInjuries));
         injuriesHomeA.addAll(injuries);
         injuriesHomeA.notifyDataSetChanged();
         setListViewHeightBasedOnItems(injuriesHome);
@@ -717,7 +729,7 @@ public class DetailFeedFragment extends Fragment implements DetailFeedView {
     public void showInjuryReportAway(List<String> injuries) {
         awayInjuryName.setText(awayName);
         injuryAwayTitlesContainer.setVisibility(View.VISIBLE);
-        if(injuries.size()<=0)injuries.add(getString(R.string.noInjuries));
+        if (injuries.size() <= 0) injuries.add(getString(R.string.noInjuries));
         injuriesAwayA.addAll(injuries);
         injuriesAwayA.notifyDataSetChanged();
         setListViewHeightBasedOnItems(injuriesAway);
@@ -740,10 +752,15 @@ public class DetailFeedFragment extends Fragment implements DetailFeedView {
 
     }
 
+    @Override
+    public void hideRefresh() {
+        swipeDetails.setRefreshing(false);
+    }
+
     private void setDate(String gameDate) {
-        String date = gameDate.replace("T"," ");
-        date = date.substring(0,date.length()-4);
-        Log.d(TAG,"date:"+date);
+        String date = gameDate.replace("T", " ");
+        date = date.substring(0, date.length() - 4);
+        Log.d(TAG, "date:" + date);
         SimpleDateFormat sourceFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         //SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
         sourceFormat.setTimeZone(TimeZone.getTimeZone("US/Eastern"));
@@ -758,7 +775,7 @@ public class DetailFeedFragment extends Fragment implements DetailFeedView {
             destFormat.setTimeZone(tz);
             //for(String id : tz.getAvailableIDs())
             //Log.d(TAG,"availableIDS:"+id);
-            Log.d(TAG,"tz"+tz.getDisplayName()+" parsed:"+parsed.toString());
+            Log.d(TAG, "tz" + tz.getDisplayName() + " parsed:" + parsed.toString());
             String result = destFormat.format(parsed);
             String timep = timeDestFormat.format(parsed);
             gameday.setText(result);
@@ -824,19 +841,40 @@ public class DetailFeedFragment extends Fragment implements DetailFeedView {
     @Override
     public void onSaveInstanceState(Bundle outState) {
 
-        outState.putString("gameid",gameid);
-        outState.putString("gameStatus",gameStatus);
-        outState.putString("awayName",awayName);
-        outState.putString("homeName",homeName);
-        outState.putString("awayC",awayC);
-        outState.putString("homeC",homeC);
-        outState.putString("acrHome",acrHome);
-        outState.putString("acrAway",acrAway);
-        outState.putString("awayid",awayid);
-        outState.putString("homeid",homeid);
-        outState.putString("away_img",away_img);
-        outState.putString("home_img",home_img);
+        outState.putString("gameid", gameid);
+        outState.putString("gameStatus", gameStatus);
+        outState.putString("awayName", awayName);
+        outState.putString("homeName", homeName);
+        outState.putString("awayC", awayC);
+        outState.putString("homeC", homeC);
+        outState.putString("acrHome", acrHome);
+        outState.putString("acrAway", acrAway);
+        outState.putString("awayid", awayid);
+        outState.putString("homeid", homeid);
+        outState.putString("away_img", away_img);
+        outState.putString("home_img", home_img);
 
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onRefresh() {
+        refreshInfo();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        //refreshInfo();
+    }
+
+    private void refreshInfo()
+    {
+        if (!gameStatus.equals("1")) {
+            presenter.getGameStats(gameid);
+            presenter.getPlaybyPlay(gameid);
+        }else{
+            swipeDetails.setRefreshing(false);
+        }
     }
 }

@@ -122,6 +122,14 @@ public class GameDetailActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+    private String playersHome;
+    private String playersAway;
+    public void setPlayersHome(){
+
+    }
+    public void setPlayersAway(){
+
+    }
 
 
 
