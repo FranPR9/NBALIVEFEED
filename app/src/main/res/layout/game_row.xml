@@ -26,20 +26,19 @@
                 android:layout_height="50dp"
                 android:id="@+id/away_img"
                 android:src="@mipmap/ic_launcher"
-                />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/name_away"
-                android:text="Warriors"
                 android:visibility="gone"
                 />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/city_away"
-                android:text="Golden State"
-                android:visibility="gone"
+                android:text=""
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/name_away"
+                android:text="Warriors"
                 />
             <TextView
                 android:layout_width="wrap_content"
@@ -91,20 +90,19 @@
                 android:layout_height="50dp"
                 android:id="@+id/home_img"
                 android:src="@mipmap/ic_launcher"
-                />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/name_home"
-                android:text="Cavaliers"
                 android:visibility="gone"
                 />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/city_home"
-                android:text="Cleveland"
-                android:visibility="gone"
+                android:text=""
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/name_home"
+                android:text=""
                 />
             <TextView
                 android:layout_width="wrap_content"

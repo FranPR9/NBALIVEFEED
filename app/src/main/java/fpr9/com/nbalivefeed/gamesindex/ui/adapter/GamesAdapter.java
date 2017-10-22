@@ -27,8 +27,13 @@ public class GamesAdapter extends RecyclerView.Adapter<GamesAdapter.ViewHolder> 
     ImageLoader imageLoader;
     List<Game> games;
     OnGameListener listener;
+    private boolean show_City = true;
 
     private int size = 0;
+
+    public void setShow_City(boolean show_City) {
+        this.show_City = show_City;
+    }
 
     public GamesAdapter(ImageLoader imageLoader, List<Game> games, OnGameListener listener) {
         this.imageLoader = imageLoader;
@@ -60,9 +65,11 @@ public class GamesAdapter extends RecyclerView.Adapter<GamesAdapter.ViewHolder> 
             Game aux = games.get(position);
 
             holder.nameAway.setText(aux.getVisitor().getName());
-            holder.cityAway.setText(aux.getVisitor().getCity());
+            if(show_City){
+                holder.cityAway.setText(aux.getVisitor().getCity());
+            }
             holder.scoreAway.setText(aux.getVisitor().getScore() + "");
-            imageLoader.load(holder.awayImg, aux.getVisitor().getImg());
+            //imageLoader.load(holder.awayImg, aux.getVisitor().getImg());
 
             if (aux.getPeriod() <= 0) {
                 //holder.gameInfoContainer.setVisibility(View.GONE);
@@ -70,6 +77,8 @@ public class GamesAdapter extends RecyclerView.Adapter<GamesAdapter.ViewHolder> 
                 if(aux.getLocal().getDate()!=null){
                     String date = aux.getLocal().getDate().replace("T","");
                     date = date.substring(0,10);
+                    date = date.replace("-","/");
+                    //holder.period.setTextSize(10);
                     holder.period.setText(date);
                 }else {
                     holder.period.setVisibility(View.GONE);
@@ -87,9 +96,11 @@ public class GamesAdapter extends RecyclerView.Adapter<GamesAdapter.ViewHolder> 
 
 
             holder.nameHome.setText(aux.getLocal().getName());
-            holder.cityHome.setText(aux.getLocal().getCity());
+            if(show_City){
+                holder.cityHome.setText(aux.getLocal().getCity());
+            }
             holder.scoreHome.setText(aux.getLocal().getScore() + "");
-            imageLoader.load(holder.homeImg, aux.getLocal().getImg());
+            //imageLoader.load(holder.homeImg, aux.getLocal().getImg());
 
             if (listener != null)
                 holder.setOnGameClick(aux, listener);

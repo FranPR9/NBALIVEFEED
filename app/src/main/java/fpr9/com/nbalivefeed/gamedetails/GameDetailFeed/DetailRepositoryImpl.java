@@ -2,6 +2,7 @@ package fpr9.com.nbalivefeed.gamedetails.GameDetailFeed;
 
 import android.util.Log;
 
+import java.util.Calendar;
 import java.util.List;
 
 import fpr9.com.nbalivefeed.BuildConfig;
@@ -36,17 +37,51 @@ public class DetailRepositoryImpl implements DetailRepository {
     String injury_report =BuildConfig.injury_report;
     String oddUrl = BuildConfig.oddUrl;
     String pre_game = BuildConfig.pre_game;
+    private String NBA_SEASON = "";
 
     public DetailRepositoryImpl(EventBus eventBus, StatsService statsService) {
         this.eventBus = eventBus;
         this.statsService = statsService;
+        NBA_SEASON = getNBAseason();
+        Log.d(TAG,"nba_Season:"+NBA_SEASON);
+
+        base_url = base_url.replace("[season_year]",Calendar.getInstance().get(Calendar.YEAR)+"");
+        pbp_url = pbp_url.replace("[season_year]",Calendar.getInstance().get(Calendar.YEAR)+"");
+    }
+
+    private String getNBAseason() {
+        // entre octubre y duciebte
+        //enero junio
+        Calendar c = Calendar.getInstance();
+        if(c.get(Calendar.MONTH)>=Calendar.OCTOBER && c.get(Calendar.MONTH)<=Calendar.DECEMBER){
+            String firstYear = c.get(Calendar.YEAR)+"";
+            c.add(Calendar.YEAR,1);
+            String nextYear = c.get(Calendar.YEAR)+"";
+            String season = "";
+            season = firstYear+"-"+nextYear.substring(nextYear.length()-2,nextYear.length());
+            return season;
+        }
+
+
+        if(c.get(Calendar.MONTH)>=Calendar.JANUARY && c.get(Calendar.MONTH)<=Calendar.JUNE){
+            String nextYear = c.get(Calendar.YEAR)+"";
+            c.add(Calendar.YEAR,-1);
+            String firstYear = c.get(Calendar.YEAR)+"";
+            String season = "";
+            season = firstYear+"-"+nextYear.substring(nextYear.length()-2,nextYear.length());
+            return season;
+        }
+
+
+
+        return null;
     }
 
     @Override
     public void getStats(String gameid) {
         Long tsLong = System.currentTimeMillis()/1000;
         String ts = tsLong.toString();
-        Log.d(TAG,"ts:"+ts);
+        //Log.d(TAG,"ts:"+ts);
         Call<StatsResponse> call = statsService.getScores(base_url+gameid+".js",ts);
         call.enqueue(new Callback<StatsResponse>() {
             @Override
@@ -66,7 +101,7 @@ public class DetailRepositoryImpl implements DetailRepository {
 
             @Override
             public void onFailure(Call<StatsResponse> call, Throwable t) {
-                Log.d(TAG,"Error:"+t.getMessage());
+                //Log.d(TAG,"Error:"+t.getMessage());
                 post(t.getMessage(), DetailEvent.STATS_TYPE,null,false);
             }
         });
@@ -102,8 +137,8 @@ public class DetailRepositoryImpl implements DetailRepository {
 
     @Override
     public void getHomeCommonStats(String teamid) {
-        Log.d(TAG,"commonhomestats:"+teamid);
-        Call<CommonStats> call = statsService.getCommonStats(common_stats,teamid,"00","Regular Season","2016-17");
+        //Log.d(TAG,"commonhomestats:"+teamid);
+        Call<CommonStats> call = statsService.getCommonStats(common_stats,teamid,"00","Regular Season",NBA_SEASON);
         call.enqueue(CommonCallBack(DetailEvent.COMMON_STATS_HOME));
     }
 
@@ -134,10 +169,10 @@ public class DetailRepositoryImpl implements DetailRepository {
         event.setCommonStats(commonStats);
 
         if(error!=null){
-            Log.d(TAG,"about to send event:"+type+" "+success+" error:"+error);
+            //Log.d(TAG,"about to send event:"+type+" "+success+" error:"+error);
         }
         else{
-            Log.d(TAG,"about to send event:"+type+" "+success);
+            //Log.d(TAG,"about to send event:"+type+" "+success);
         }
 
         eventBus.post(event);
@@ -146,15 +181,15 @@ public class DetailRepositoryImpl implements DetailRepository {
 
     @Override
     public void getAwayCommonStats(String teamid) {
-        Log.d(TAG,"commonAwaystats:"+teamid);
-        Call<CommonStats> call = statsService.getCommonStats(common_stats,teamid,"00","Regular Season","2016-17");
+        //Log.d(TAG,"commonAwaystats:"+teamid);
+        Call<CommonStats> call = statsService.getCommonStats(common_stats,teamid,"00","Regular Season",NBA_SEASON);
         call.enqueue(CommonCallBack(DetailEvent.COMMON_STATS_AWAY));
     }
 
     @Override
     public void getHomeStats(String teamid) {
         Call<CommonStats> call = statsService.getStats(stats,teamid,"","","","0","00","","Base","0","0","","N","PerGame",
-                "0","N","N","2016-17","","Regular Season","","");
+                "0","N","N",NBA_SEASON,"","Regular Season","","");
 
         call.enqueue(getTeamStatsCallback(DetailEvent.STATS_HOME));
     }
@@ -162,7 +197,7 @@ public class DetailRepositoryImpl implements DetailRepository {
     @Override
     public void getAwayStats(String teamid) {
         Call<CommonStats> call = statsService.getStats(stats,teamid,"","","","0","00","","Base","0","0","","N","PerGame",
-                                                        "0","N","N","2016-17","","Regular Season","","");
+                                                        "0","N","N",NBA_SEASON,"","Regular Season","","");
 
         call.enqueue(getTeamStatsCallback(DetailEvent.STATS_AWAY));
 
@@ -171,7 +206,7 @@ public class DetailRepositoryImpl implements DetailRepository {
 
     @Override
     public void getLastGamesAway(String teamid) {
-        Call<CommonStats> call = statsService.getTeamGameLog(teamid,"00","Regular Season","2016-17","","");
+        Call<CommonStats> call = statsService.getTeamGameLog(teamid,"00","Regular Season",NBA_SEASON,"","");
         call.enqueue(new Callback<CommonStats>() {
             @Override
             public void onResponse(Call<CommonStats> call, Response<CommonStats> response) {
@@ -210,7 +245,7 @@ public class DetailRepositoryImpl implements DetailRepository {
 
             @Override
             public void onFailure(Call<InjuryContainer> call, Throwable t) {
-                Log.d(TAG,"injury Failed");
+                //Log.d(TAG,"injury Failed");
                 postI(t.getMessage(),DetailEvent.INJURY_REPORT,false,null);
             }
         });
@@ -275,10 +310,10 @@ public class DetailRepositoryImpl implements DetailRepository {
         event.setSuccess(success);
         event.setPregame(pregame);
         if(error!=null){
-            Log.d(TAG,"about to send event:"+type+" "+success+" error:"+error);
+            //Log.d(TAG,"about to send event:"+type+" "+success+" error:"+error);
         }
         else{
-            Log.d(TAG,"about to send event:"+type+" "+success);
+            //Log.d(TAG,"about to send event:"+type+" "+success);
         }
         eventBus.post(event);
     }
@@ -290,10 +325,10 @@ public class DetailRepositoryImpl implements DetailRepository {
         event.setSuccess(success);
         event.setOdds(odds);
         if(error!=null){
-            Log.d(TAG,"about to send event:"+type+" "+success+" error:"+error);
+            //Log.d(TAG,"about to send event:"+type+" "+success+" error:"+error);
         }
         else{
-            Log.d(TAG,"about to send event:"+type+" "+success);
+            //Log.d(TAG,"about to send event:"+type+" "+success);
         }
         eventBus.post(event);
     }
@@ -305,17 +340,17 @@ public class DetailRepositoryImpl implements DetailRepository {
         event.setSuccess(success);
         event.setInjuries(injuries);
         if(error!=null){
-            Log.d(TAG,"about to send event:"+type+" "+success+" error:"+error);
+            //Log.d(TAG,"about to send event:"+type+" "+success+" error:"+error);
         }
         else{
-            Log.d(TAG,"about to send event:"+type+" "+success);
+            //Log.d(TAG,"about to send event:"+type+" "+success);
         }
         eventBus.post(event);
     }
 
     @Override
     public void getLastGamesHome(String teamid) {
-        Call<CommonStats> call = statsService.getTeamGameLog(teamid,"00","Regular Season","2016-17","","");
+        Call<CommonStats> call = statsService.getTeamGameLog(teamid,"00","Regular Season",NBA_SEASON,"","");
         call.enqueue(new Callback<CommonStats>() {
             @Override
             public void onResponse(Call<CommonStats> call, Response<CommonStats> response) {
@@ -369,7 +404,7 @@ public class DetailRepositoryImpl implements DetailRepository {
         event.setSuccess(success);
         event.setSize(size);
 
-        Log.d(TAG,"about to send event:"+type+" "+success);
+        //Log.d(TAG,"about to send event:"+type+" "+success);
 
         eventBus.post(event);
     }
@@ -381,7 +416,7 @@ public class DetailRepositoryImpl implements DetailRepository {
         event.setSuccess(success);
         event.setPlaysResponse(playsResponse);
 
-        Log.d(TAG,"about to send event:"+statsType+" "+success);
+        //Log.d(TAG,"about to send event:"+statsType+" "+success);
 
         eventBus.post(event);
 
@@ -395,10 +430,10 @@ public class DetailRepositoryImpl implements DetailRepository {
         event.setStatsResponse(statsResponse);
 
         if(message!=null){
-            Log.d(TAG,"about to send event:"+statsType+" "+success+" error:"+message);
+            //Log.d(TAG,"about to send event:"+statsType+" "+success+" error:"+message);
         }
         else{
-            Log.d(TAG,"about to send event:"+statsType+" "+success);
+            //Log.d(TAG,"about to send event:"+statsType+" "+success);
         }
         eventBus.post(event);
 
@@ -431,10 +466,10 @@ public class DetailRepositoryImpl implements DetailRepository {
         event.setCommonStats(commonStats);
 
         if(error!=null){
-            Log.d(TAG,"about to send event:"+type+" "+success+" error:"+error);
+            //Log.d(TAG,"about to send event:"+type+" "+success+" error:"+error);
         }
         else{
-            Log.d(TAG,"about to send event:"+type+" "+success);
+            //Log.d(TAG,"about to send event:"+type+" "+success);
         }
 
         eventBus.post(event);

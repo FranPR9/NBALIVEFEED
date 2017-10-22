@@ -8,7 +8,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -168,6 +167,16 @@ public class DetailFeedFragment extends Fragment implements DetailFeedView, Swip
     TextView injuryText;
     @Bind(R.id.swipeDetails)
     SwipeRefreshLayout swipeDetails;
+    @Bind(R.id.acronymAwayOdd)
+    TextView acronymAwayOdd;
+    @Bind(R.id.acronymHomeOdd)
+    TextView acronymHomeOdd;
+    @Bind(R.id.acronymSpreadOdd)
+    TextView acronymSpreadOdd;
+    @Bind(R.id.awayTeamPrev)
+    TextView awayTeamPrev;
+    @Bind(R.id.awayHomePrev)
+    TextView awayHomePrev;
 
     private String imgUrl = BuildConfig.player_url;
 
@@ -316,7 +325,7 @@ public class DetailFeedFragment extends Fragment implements DetailFeedView, Swip
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_game_detail, container, false);
-        Log.d(TAG, "status:" + gameStatus);
+        //Log.d(TAG, "status:" + gameStatus);
 
         getInfo();
 
@@ -329,6 +338,8 @@ public class DetailFeedFragment extends Fragment implements DetailFeedView, Swip
         if (!gameStatus.equals("1")) {
             presenter.getGameStats(gameid);
             presenter.getPlaybyPlay(gameid);
+            presenter.getInjuryReport(homeC.toUpperCase(), awayC.toUpperCase());
+            presenter.getOdds();
         } else {
             presenter.getCommonHomeStats(homeid);
             presenter.getCommonAwayStats(awayid);
@@ -359,6 +370,14 @@ public class DetailFeedFragment extends Fragment implements DetailFeedView, Swip
 
         injuriesHome.setAdapter(injuriesHomeA);
         injuriesAway.setAdapter(injuriesAwayA);
+
+        if (homeName != null) {
+            cityHome.setText(homeC);
+            nameHome.setText(homeName);
+
+            cityAway.setText(awayC);
+            nameAway.setText(awayName);
+        }
 
         if (home_img != null) {
             showImages(home_img, away_img);
@@ -656,16 +675,20 @@ public class DetailFeedFragment extends Fragment implements DetailFeedView, Swip
 
     @Override
     public void showHomeTeamPrevGames(List<Game> games) {
-        Log.d(TAG, "PrevHomeGames:" + games.size());
+        //Log.d(TAG, "PrevHomeGames:" + games.size());
         //preGames.setVisibility(View.VISIBLE);
+        awayHomePrev.setText(homeName);
+        gamesAdapterHome.setShow_City(false);
         gamesAdapterHome.setGames(games);
     }
 
     @Override
     public void showAwayTeamPrevGames(List<Game> games) {
-        Log.d(TAG, "PrevAwayGames:" + games.size());
-        preGames.setVisibility(View.VISIBLE);
+        //Log.d(TAG, "PrevAwayGames:" + games.size());
+        awayTeamPrev.setText(awayName);
+        gamesAdapterAway.setShow_City(false);
         gamesAdapterAway.setGames(games);
+        preGames.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -760,7 +783,7 @@ public class DetailFeedFragment extends Fragment implements DetailFeedView, Swip
     private void setDate(String gameDate) {
         String date = gameDate.replace("T", " ");
         date = date.substring(0, date.length() - 4);
-        Log.d(TAG, "date:" + date);
+        //Log.d(TAG, "date:" + date);
         SimpleDateFormat sourceFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         //SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
         sourceFormat.setTimeZone(TimeZone.getTimeZone("US/Eastern"));
@@ -775,7 +798,7 @@ public class DetailFeedFragment extends Fragment implements DetailFeedView, Swip
             destFormat.setTimeZone(tz);
             //for(String id : tz.getAvailableIDs())
             //Log.d(TAG,"availableIDS:"+id);
-            Log.d(TAG, "tz" + tz.getDisplayName() + " parsed:" + parsed.toString());
+            //Log.d(TAG, "tz" + tz.getDisplayName() + " parsed:" + parsed.toString());
             String result = destFormat.format(parsed);
             String timep = timeDestFormat.format(parsed);
             gameday.setText(result);
@@ -795,10 +818,15 @@ public class DetailFeedFragment extends Fragment implements DetailFeedView, Swip
         imageLoader.load(oddHomeImg, home_img);
         mlAwayOdd.setText(odd.getMlAwayTeamOdds());
         mlHomeOdd.setText(odd.getMlHomeTeamOdds());
+        acronymHomeOdd.setText(homeName);
+        acronymAwayOdd.setText(awayName);
+
         if (odd.getAtsFavoredTeamAbbrv().contains(acrAway)) {
+            acronymSpreadOdd.setText(awayName);
             imageLoader.load(spreadOddImg, away_img);
         } else {
             imageLoader.load(spreadOddImg, home_img);
+            acronymSpreadOdd.setText(homeName);
         }
         spreadOdd.setText(odd.getAtsHandicap());
         oddContainer.setVisibility(View.VISIBLE);
@@ -868,12 +896,11 @@ public class DetailFeedFragment extends Fragment implements DetailFeedView, Swip
         //refreshInfo();
     }
 
-    private void refreshInfo()
-    {
+    private void refreshInfo() {
         if (!gameStatus.equals("1")) {
             presenter.getGameStats(gameid);
             presenter.getPlaybyPlay(gameid);
-        }else{
+        } else {
             swipeDetails.setRefreshing(false);
         }
     }

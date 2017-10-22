@@ -85,7 +85,7 @@ public class GamesIndex extends AppCompatActivity implements IndexView, OnGameLi
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_games_index, menu);
+        //getMenuInflater().inflate(R.menu.menu_games_index, menu);
         return true;
     }
 

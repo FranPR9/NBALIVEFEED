@@ -38,7 +38,7 @@ public final class LenientGsonConverter extends Converter.Factory {
     public Converter<ResponseBody, ?> responseBodyConverter(Type type, Annotation[] annotations, Retrofit retrofit) {
 
 
-        Log.d(TAG,"response body convereter");
+        //Log.d(TAG,"response body convereter");
         return super.responseBodyConverter(type, annotations, retrofit);
     }
 }

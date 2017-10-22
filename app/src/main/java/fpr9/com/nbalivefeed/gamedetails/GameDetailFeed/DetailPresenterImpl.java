@@ -59,7 +59,7 @@ public class DetailPresenterImpl implements DetailPresenter {
     @Subscribe
     public void GameInfoRespond(DetailEvent event) {
         view.hideRefresh();
-        Log.d(TAG,"type:"+event.getType());
+        //Log.d(TAG,"type:"+event.getType());
         if (event.isSuccess()) {
             switch (event.getType()) {
                 case DetailEvent.STATS_TYPE:

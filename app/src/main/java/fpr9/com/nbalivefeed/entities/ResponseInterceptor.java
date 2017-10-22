@@ -62,7 +62,8 @@ public class ResponseInterceptor implements Interceptor {
 
             //var g_pbp=
             //JSONObject jsonObject = new JSONObject(stringJson);
-            //Log.d(TAG,stringJson);
+            Log.d(TAG,requestUrl);
+            Log.d(TAG,stringJson);
 
             MediaType contentType = response.body().contentType();
             ResponseBody body = ResponseBody.create(contentType,stringJson);// create(contentType, jsonObject);

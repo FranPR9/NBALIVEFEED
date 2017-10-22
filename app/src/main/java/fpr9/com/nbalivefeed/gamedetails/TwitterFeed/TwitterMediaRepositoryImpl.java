@@ -39,7 +39,7 @@ public class TwitterMediaRepositoryImpl implements TwitterMediaRepository {
         String date = getDate();
         query="from:@NBA since:"+date+" "+query+" -RT";
 
-        Log.d(TAG,query);
+        //Log.d(TAG,query);
         Twitter.getApiClient().getSearchService().tweets(query,null,null,null,null,null,null,null,null,null).enqueue(new Callback<Search>() {
             @Override
             public void success(Result<Search> result) {

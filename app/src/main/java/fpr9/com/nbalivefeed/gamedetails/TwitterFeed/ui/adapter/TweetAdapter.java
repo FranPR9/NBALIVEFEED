@@ -54,7 +54,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Tweet aux = tweets.get(position);
-        Log.d(TAG,"new tweet view");
+        //Log.d(TAG,"new tweet view");
 
             //holder.tweetContainer.addView(new TweetView(context, aux));
             holder.tweetView.setTweet(aux);

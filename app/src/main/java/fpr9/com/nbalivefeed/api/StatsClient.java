@@ -1,5 +1,8 @@
 package fpr9.com.nbalivefeed.api;
 
+import android.util.Log;
+
+import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
 import fpr9.com.nbalivefeed.entities.ResponseInterceptor;
@@ -13,10 +16,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class StatsClient {
 
     private Retrofit retrofit;
-    private final static String BASE_URL = "https://neulionmdnyc-a.akamaihd.net/fs/nba/feeds_s2012/stats/2016/boxscore/";
+    //private final static String BASE_URL = "https://neulionmdnyc-a.akamaihd.net/fs/nba/feeds_s2012/stats/2016/boxscore/";
 
     public StatsClient() {
-
+        Calendar c = Calendar.getInstance();
+        String BASE_URL = "https://neulionmdnyc-a.akamaihd.net/fs/nba/feeds_s2012/stats/"+c.get(Calendar.YEAR)+"/boxscore/";
+        Log.d("StatsClient",BASE_URL);
         final OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .readTimeout(60, TimeUnit.SECONDS)
                 .connectTimeout(60, TimeUnit.SECONDS)
