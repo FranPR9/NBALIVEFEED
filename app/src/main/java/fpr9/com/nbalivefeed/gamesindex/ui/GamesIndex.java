@@ -16,7 +16,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import fpr9.com.nbalivefeed.NBAlivefeedApp;
 import fpr9.com.nbalivefeed.R;
@@ -31,20 +31,20 @@ import fpr9.com.nbalivefeed.gamesindex.ui.adapter.OnGameListener;
 public class GamesIndex extends AppCompatActivity implements IndexView, OnGameListener, SwipeRefreshLayout.OnRefreshListener {
 
     private static final String TAG = "GamesIndex";
-    @Bind(R.id.toolbar)
+    @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @Bind(R.id.gamesDate)
+    @BindView(R.id.gamesDate)
     TextView gamesDate;
-    @Bind(R.id.games_recycler)
+    @BindView(R.id.games_recycler)
     RecyclerView gamesRecycler;
-    @Bind(R.id.indexCoordinator)
+    @BindView(R.id.indexCoordinator)
     CoordinatorLayout indexCoordinator;
-    @Bind(R.id.indexProgressBar)
+    @BindView(R.id.indexProgressBar)
     ProgressBar indexProgressBar;
 
     IndexPresenter presenter;
     GamesAdapter adapter;
-    @Bind(R.id.swipeContainerIndex)
+    @BindView(R.id.swipeContainerIndex)
     SwipeRefreshLayout swipeContainerIndex;
 
 

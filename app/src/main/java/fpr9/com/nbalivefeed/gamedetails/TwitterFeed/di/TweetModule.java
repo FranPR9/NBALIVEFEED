@@ -1,8 +1,5 @@
 package fpr9.com.nbalivefeed.gamedetails.TwitterFeed.di;
 
-
-import com.twitter.sdk.android.Twitter;
-import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.models.Tweet;
 
 import java.util.ArrayList;

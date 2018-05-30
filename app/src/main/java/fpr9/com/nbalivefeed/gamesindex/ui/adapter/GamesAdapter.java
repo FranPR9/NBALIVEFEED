@@ -12,7 +12,7 @@ import android.widget.TextView;
 import java.text.ParseException;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import fpr9.com.nbalivefeed.R;
 import fpr9.com.nbalivefeed.entities.Game;
@@ -116,29 +116,29 @@ public class GamesAdapter extends RecyclerView.Adapter<GamesAdapter.ViewHolder> 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        @Bind(R.id.away_img)
+        @BindView(R.id.away_img)
         ImageView awayImg;
-        @Bind(R.id.name_away)
+        @BindView(R.id.name_away)
         TextView nameAway;
-        @Bind(R.id.city_away)
+        @BindView(R.id.city_away)
         TextView cityAway;
-        @Bind(R.id.score_away)
+        @BindView(R.id.score_away)
         TextView scoreAway;
-        @Bind(R.id.period)
+        @BindView(R.id.period)
         TextView period;
-        @Bind(R.id.time_left)
+        @BindView(R.id.time_left)
         TextView timeLeft;
-        @Bind(R.id.status)
+        @BindView(R.id.status)
         TextView status;
-        @Bind(R.id.home_img)
+        @BindView(R.id.home_img)
         ImageView homeImg;
-        @Bind(R.id.name_home)
+        @BindView(R.id.name_home)
         TextView nameHome;
-        @Bind(R.id.city_home)
+        @BindView(R.id.city_home)
         TextView cityHome;
-        @Bind(R.id.score_home)
+        @BindView(R.id.score_home)
         TextView scoreHome;
-        @Bind(R.id.gameInfoContainer)
+        @BindView(R.id.gameInfoContainer)
         LinearLayout gameInfoContainer;
 
         View view;

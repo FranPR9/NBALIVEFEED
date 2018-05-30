@@ -17,8 +17,9 @@ import com.twitter.sdk.android.tweetui.TweetTimelineListAdapter;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import fpr9.com.nbalivefeed.NBAlivefeedApp;
 import fpr9.com.nbalivefeed.R;
 import fpr9.com.nbalivefeed.gamedetails.GameDetailActivity;
@@ -35,12 +36,13 @@ public class TwitterMediaFragment extends Fragment implements TwitterMediaView {
     TweetAdapter adapter;
     ImageLoader imageLoader;
     TwitterMediaPresenter presenter;
-    @Bind(R.id.tweets_recycler)
+    @BindView(R.id.tweets_recycler)
     RecyclerView tweetsRecycler;
-    @Bind(R.id.tweets_progressBar)
+    @BindView(R.id.tweets_progressBar)
     ProgressBar tweetsProgressBar;
-    @Bind(R.id.tweetList)
+    @BindView(R.id.tweetList)
     ListView tweetList;
+    private Unbinder unbinder;
 
 
     @Override
@@ -62,7 +64,7 @@ public class TwitterMediaFragment extends Fragment implements TwitterMediaView {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_twitter_feed, container, false);
-        ButterKnife.bind(this, rootView);
+        unbinder = ButterKnife.bind(this, rootView);
         presenter.getTweets(query);
         return rootView;
     }
@@ -116,6 +118,6 @@ public class TwitterMediaFragment extends Fragment implements TwitterMediaView {
     public void onDestroyView() {
         super.onDestroyView();
         presenter.onDestroy();
-        ButterKnife.unbind(this);
+        unbinder.unbind();
     }
 }

@@ -16,7 +16,7 @@ import com.twitter.sdk.android.tweetui.TweetView;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import fpr9.com.nbalivefeed.R;
 import fpr9.com.nbalivefeed.lib.ImageLoader;
@@ -82,9 +82,10 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
     }
 
     private boolean checkIfTweetHasExtendedMedia(Tweet tweet) {
-        return tweet.extendedEtities != null &&
+        /*return tweet.extendedEtities != null &&
                 tweet.extendedEtities.media != null &&
-                !tweet.extendedEtities.media.isEmpty();
+                !tweet.extendedEtities.media.isEmpty();*/
+        return false;
     }
 
     @Override
@@ -106,9 +107,9 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         TextView tweetText;
         */
 
-        @Bind(R.id.tweetView)
+        @BindView(R.id.tweetView)
         TweetView tweetView;
-        @Bind(R.id.tweetContainer)
+        @BindView(R.id.tweetContainer)
         LinearLayout tweetContainer;
 
         public ViewHolder(View itemView) {

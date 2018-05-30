@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import fpr9.com.nbalivefeed.R;
 import fpr9.com.nbalivefeed.entities.Play;
@@ -57,9 +57,9 @@ public class PlaysAdapter extends RecyclerView.Adapter<PlaysAdapter.ViewHolder> 
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        @Bind(R.id.play_description)
+        @BindView(R.id.play_description)
         TextView playDescription;
-        @Bind(R.id.play_clock)
+        @BindView(R.id.play_clock)
         TextView playClock;
 
         public ViewHolder(View itemView) {

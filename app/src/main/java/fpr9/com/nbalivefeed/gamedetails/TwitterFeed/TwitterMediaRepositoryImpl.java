@@ -2,9 +2,10 @@ package fpr9.com.nbalivefeed.gamedetails.TwitterFeed;
 
 import android.util.Log;
 
-import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
+import com.twitter.sdk.android.core.Twitter;
+import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.models.Search;
 import com.twitter.sdk.android.core.models.Tweet;
@@ -40,7 +41,7 @@ public class TwitterMediaRepositoryImpl implements TwitterMediaRepository {
         query="from:@NBA since:"+date+" "+query+" -RT";
 
         //Log.d(TAG,query);
-        Twitter.getApiClient().getSearchService().tweets(query,null,null,null,null,null,null,null,null,null).enqueue(new Callback<Search>() {
+        TwitterCore.getInstance().getApiClient().getSearchService().tweets(query,null,null,null,null,null,null,null,null,null).enqueue(new Callback<Search>() {
             @Override
             public void success(Result<Search> result) {
                 if(result.response.isSuccessful()){

@@ -1,12 +1,14 @@
 package fpr9.com.nbalivefeed;
 
 import android.app.Application;
+import android.util.Log;
 
-import com.raizlabs.android.dbflow.config.FlowConfig;
-import com.raizlabs.android.dbflow.config.FlowManager;
 
-import com.twitter.sdk.android.Twitter;
+import com.twitter.sdk.android.core.DefaultLogger;
+import com.twitter.sdk.android.core.Twitter;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
+import com.twitter.sdk.android.core.TwitterConfig;
+
 import fpr9.com.nbalivefeed.gamedetails.GameDetailActivity;
 import fpr9.com.nbalivefeed.gamedetails.GameDetailFeed.di.DaggerDetailComponent;
 import fpr9.com.nbalivefeed.gamedetails.GameDetailFeed.di.DetailComponent;
@@ -23,7 +25,6 @@ import fpr9.com.nbalivefeed.gamesindex.ui.GamesIndex;
 import fpr9.com.nbalivefeed.gamesindex.ui.IndexView;
 import fpr9.com.nbalivefeed.gamesindex.ui.adapter.OnGameListener;
 import fpr9.com.nbalivefeed.lib.di.LibsModule;
-import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by FranciscoPR on 28/10/16.
@@ -38,8 +39,14 @@ public class NBAlivefeedApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
-        Fabric.with(this, new Twitter(authConfig));
+        //TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
+        TwitterConfig config = new TwitterConfig.Builder(this)
+                .logger(new DefaultLogger(Log.DEBUG))
+                .twitterAuthConfig(new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET))
+                .debug(true)
+                .build();
+        Twitter.initialize(config);
+        //Fabric.with(this, new Twitter(authConfig));
         DBinit();
     }
 
@@ -50,11 +57,11 @@ public class NBAlivefeedApp extends Application {
     }
 
     private void DBinit(){
-        FlowManager.init(new FlowConfig.Builder(this).build());
+        //FlowManager.init(new FlowConfig.Builder(this).build());
     }
 
     private void DBFTearDown(){
-        FlowManager.destroy();
+        //FlowManager.destroy();
     }
 
     public IndexComponent getIndexComponent(GamesIndex activity, IndexView view, OnGameListener listener){

@@ -20,7 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import fpr9.com.nbalivefeed.R;
 import fpr9.com.nbalivefeed.gamedetails.GameDetailFeed.ui.DetailFeedFragment;
@@ -28,7 +28,7 @@ import fpr9.com.nbalivefeed.gamedetails.TwitterFeed.ui.TwitterMediaFragment;
 
 public class GameDetailActivity extends AppCompatActivity {
 
-    @Bind(R.id.main_content)
+    @BindView(R.id.main_content)
     CoordinatorLayout mainContent;
     String imghome,imgaway;
     private String homea,awaya,homeName,awayName,homeC,awayC;

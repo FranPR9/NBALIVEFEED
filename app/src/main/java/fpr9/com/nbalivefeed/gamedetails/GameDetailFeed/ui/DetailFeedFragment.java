@@ -2,12 +2,14 @@ package fpr9.com.nbalivefeed.gamedetails.GameDetailFeed.ui;
 
 
 import android.os.Bundle;
+import android.os.Debug;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +20,11 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubePlayer;
+import com.google.android.youtube.player.YouTubePlayerSupportFragment;
+import com.google.android.youtube.player.YouTubePlayerView;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
@@ -25,8 +32,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import fpr9.com.nbalivefeed.BuildConfig;
 import fpr9.com.nbalivefeed.NBAlivefeedApp;
 import fpr9.com.nbalivefeed.R;
@@ -50,179 +58,178 @@ import fpr9.com.nbalivefeed.lib.ImageLoader;
 /**
  * Created by FranciscoPR on 29/10/16.
  */
-public class DetailFeedFragment extends Fragment implements DetailFeedView, SwipeRefreshLayout.OnRefreshListener {
+public class DetailFeedFragment extends Fragment implements DetailFeedView, SwipeRefreshLayout.OnRefreshListener, YouTubePlayer.OnInitializedListener {
 
 
     private static final String TAG = "DetailFeedFragment";
-    @Bind(R.id.img_pts_away)
+    @BindView(R.id.img_pts_away)
     ImageView imgPtsAway;
-    @Bind(R.id.name_pts_away)
+    @BindView(R.id.name_pts_away)
     TextView namePtsAway;
-    @Bind(R.id.pts_leader_away)
+    @BindView(R.id.pts_leader_away)
     TextView ptsLeaderAway;
-    @Bind(R.id.pts_leader_home)
+    @BindView(R.id.pts_leader_home)
     TextView ptsLeaderHome;
-    @Bind(R.id.img_pts_home)
+    @BindView(R.id.img_pts_home)
     ImageView imgPtsHome;
-    @Bind(R.id.name_pts_home)
+    @BindView(R.id.name_pts_home)
     TextView namePtsHome;
-    @Bind(R.id.img_assists_away)
+    @BindView(R.id.img_assists_away)
     ImageView imgAssistsAway;
-    @Bind(R.id.name_assists_away)
+    @BindView(R.id.name_assists_away)
     TextView nameAssistsAway;
-    @Bind(R.id.assists_leader_away)
+    @BindView(R.id.assists_leader_away)
     TextView assistsLeaderAway;
-    @Bind(R.id.assists_leader_home)
+    @BindView(R.id.assists_leader_home)
     TextView assistsLeaderHome;
-    @Bind(R.id.img_assists_home)
+    @BindView(R.id.img_assists_home)
     ImageView imgAssistsHome;
-    @Bind(R.id.name_assists_home)
+    @BindView(R.id.name_assists_home)
     TextView nameAssistsHome;
-    @Bind(R.id.img_reb_away)
+    @BindView(R.id.img_reb_away)
     ImageView imgRebAway;
-    @Bind(R.id.name_reb_away)
+    @BindView(R.id.name_reb_away)
     TextView nameRebAway;
-    @Bind(R.id.reb_leader_away)
+    @BindView(R.id.reb_leader_away)
     TextView rebLeaderAway;
-    @Bind(R.id.reb_leader_home)
+    @BindView(R.id.reb_leader_home)
     TextView rebLeaderHome;
-    @Bind(R.id.img_reb_home)
+    @BindView(R.id.img_reb_home)
     ImageView imgRebHome;
-    @Bind(R.id.name_reb_home)
+    @BindView(R.id.name_reb_home)
     TextView nameRebHome;
-    @Bind(R.id.img_stls_away)
+    @BindView(R.id.img_stls_away)
     ImageView imgStlsAway;
-    @Bind(R.id.name_stls_away)
+    @BindView(R.id.name_stls_away)
     TextView nameStlsAway;
-    @Bind(R.id.stls_leader_away)
+    @BindView(R.id.stls_leader_away)
     TextView stlsLeaderAway;
-    @Bind(R.id.stls_leader_home)
+    @BindView(R.id.stls_leader_home)
     TextView stlsLeaderHome;
-    @Bind(R.id.img_stls_home)
+    @BindView(R.id.img_stls_home)
     ImageView imgStlsHome;
-    @Bind(R.id.name_stls_home)
+    @BindView(R.id.name_stls_home)
     TextView nameStlsHome;
-    @Bind(R.id.img_blks_away)
+    @BindView(R.id.img_blks_away)
     ImageView imgBlksAway;
-    @Bind(R.id.name_blks_away)
+    @BindView(R.id.name_blks_away)
     TextView nameBlksAway;
-    @Bind(R.id.blks_leader_away)
+    @BindView(R.id.blks_leader_away)
     TextView blksLeaderAway;
-    @Bind(R.id.blks_leader_home)
+    @BindView(R.id.blks_leader_home)
     TextView blksLeaderHome;
-    @Bind(R.id.img_blks_home)
+    @BindView(R.id.img_blks_home)
     ImageView imgBlksHome;
-    @Bind(R.id.name_blks_home)
+    @BindView(R.id.name_blks_home)
     TextView nameBlksHome;
-    @Bind(R.id.preGamesAway)
+    @BindView(R.id.preGamesAway)
     RecyclerView preGamesAway;
-    @Bind(R.id.preGamesHome)
+    @BindView(R.id.preGamesHome)
     RecyclerView preGamesHome;
-    @Bind(R.id.prevGamesContainer)
+    @BindView(R.id.prevGamesContainer)
     LinearLayout prevGamesContainer;
-    @Bind(R.id.injuries_home)
+    @BindView(R.id.injuries_home)
     ListView injuriesHome;
-    @Bind(R.id.injuries_away)
+    @BindView(R.id.injuries_away)
     ListView injuriesAway;
 
-    @Bind(R.id.homeInjuryName)
+    @BindView(R.id.homeInjuryName)
     TextView homeInjuryName;
 
 
-    @Bind(R.id.injuryHomeTitlesContainer)
+    @BindView(R.id.injuryHomeTitlesContainer)
     LinearLayout injuryHomeTitlesContainer;
-    @Bind(R.id.awayInjuryName)
+    @BindView(R.id.awayInjuryName)
     TextView awayInjuryName;
 
 
-    @Bind(R.id.injuryAwayTitlesContainer)
+    @BindView(R.id.injuryAwayTitlesContainer)
     LinearLayout injuryAwayTitlesContainer;
-    @Bind(R.id.home_common_img)
+    @BindView(R.id.home_common_img)
     ImageView homeCommonImg;
-    @Bind(R.id.away_common_img)
+    @BindView(R.id.away_common_img)
     ImageView awayCommonImg;
-    @Bind(R.id.preGames)
+    @BindView(R.id.preGames)
     TextView preGames;
-    @Bind(R.id.ouOdd)
+    @BindView(R.id.ouOdd)
     TextView ouOdd;
 
 
-    @Bind(R.id.oddAwayImg)
+    @BindView(R.id.oddAwayImg)
     ImageView oddAwayImg;
-    @Bind(R.id.mlAwayOdd)
+    @BindView(R.id.mlAwayOdd)
     TextView mlAwayOdd;
 
-    @Bind(R.id.oddHomeImg)
+    @BindView(R.id.oddHomeImg)
     ImageView oddHomeImg;
-    @Bind(R.id.mlHomeOdd)
+    @BindView(R.id.mlHomeOdd)
     TextView mlHomeOdd;
 
-    @Bind(R.id.spreadOddImg)
+    @BindView(R.id.spreadOddImg)
     ImageView spreadOddImg;
-    @Bind(R.id.spreadOdd)
+    @BindView(R.id.spreadOdd)
     TextView spreadOdd;
-    @Bind(R.id.oddContainer)
+    @BindView(R.id.oddContainer)
     CardView oddContainer;
-    @Bind(R.id.injuryText)
+    @BindView(R.id.injuryText)
     TextView injuryText;
-    @Bind(R.id.swipeDetails)
+    @BindView(R.id.swipeDetails)
     SwipeRefreshLayout swipeDetails;
-    @Bind(R.id.acronymAwayOdd)
+    @BindView(R.id.acronymAwayOdd)
     TextView acronymAwayOdd;
-    @Bind(R.id.acronymHomeOdd)
+    @BindView(R.id.acronymHomeOdd)
     TextView acronymHomeOdd;
-    @Bind(R.id.acronymSpreadOdd)
+    @BindView(R.id.acronymSpreadOdd)
     TextView acronymSpreadOdd;
-    @Bind(R.id.awayTeamPrev)
+    @BindView(R.id.awayTeamPrev)
     TextView awayTeamPrev;
-    @Bind(R.id.awayHomePrev)
+    @BindView(R.id.awayHomePrev)
     TextView awayHomePrev;
-
     private String imgUrl = BuildConfig.player_url;
 
-    @Bind(R.id.assists_away)
+    @BindView(R.id.assists_away)
     TextView assistsAway;
-    @Bind(R.id.assists_home)
+    @BindView(R.id.assists_home)
     TextView assistsHome;
-    @Bind(R.id.fg_away)
+    @BindView(R.id.fg_away)
     TextView fgAway;
-    @Bind(R.id.fg_home)
+    @BindView(R.id.fg_home)
     TextView fgHome;
-    @Bind(R.id.freethrows_away)
+    @BindView(R.id.freethrows_away)
     TextView freethrowsAway;
-    @Bind(R.id.freethrows_home)
+    @BindView(R.id.freethrows_home)
     TextView freethrowsHome;
-    @Bind(R.id.triples_away)
+    @BindView(R.id.triples_away)
     TextView triplesAway;
-    @Bind(R.id.triples_home)
+    @BindView(R.id.triples_home)
     TextView triplesHome;
-    @Bind(R.id.rebounds_away)
+    @BindView(R.id.rebounds_away)
     TextView reboundsAway;
-    @Bind(R.id.rebounds_home)
+    @BindView(R.id.rebounds_home)
     TextView reboundsHome;
-    @Bind(R.id.or_away)
+    @BindView(R.id.or_away)
     TextView orAway;
-    @Bind(R.id.or_home)
+    @BindView(R.id.or_home)
     TextView orHome;
-    @Bind(R.id.dreb_away)
+    @BindView(R.id.dreb_away)
     TextView drebAway;
-    @Bind(R.id.dreb_home)
+    @BindView(R.id.dreb_home)
     TextView drebHome;
-    @Bind(R.id.stl_away)
+    @BindView(R.id.stl_away)
     TextView stlAway;
-    @Bind(R.id.stl_home)
+    @BindView(R.id.stl_home)
     TextView stlHome;
-    @Bind(R.id.blks_away)
+    @BindView(R.id.blks_away)
     TextView blksAway;
-    @Bind(R.id.blks_home)
+    @BindView(R.id.blks_home)
     TextView blksHome;
-    @Bind(R.id.to_away)
+    @BindView(R.id.to_away)
     TextView toAway;
-    @Bind(R.id.to_home)
+    @BindView(R.id.to_home)
     TextView toHome;
-    @Bind(R.id.fouls_away)
+    @BindView(R.id.fouls_away)
     TextView foulsAway;
-    @Bind(R.id.fouls_home)
+    @BindView(R.id.fouls_home)
     TextView foulsHome;
 
     DetailPresenter presenter;
@@ -230,62 +237,64 @@ public class DetailFeedFragment extends Fragment implements DetailFeedView, Swip
     PlaysAdapter playsAdapter;
     GamesAdapter gamesAdapterHome;
 
-    @Bind(R.id.away_img)
+    @BindView(R.id.away_img)
     ImageView awayImg;
-    @Bind(R.id.name_away)
+    @BindView(R.id.name_away)
     TextView nameAway;
-    @Bind(R.id.city_away)
+    @BindView(R.id.city_away)
     TextView cityAway;
-    @Bind(R.id.score_away)
+    @BindView(R.id.score_away)
     TextView scoreAway;
-    @Bind(R.id.arena)
+    @BindView(R.id.arena)
     TextView arena;
-    @Bind(R.id.gameday)
+    @BindView(R.id.gameday)
     TextView gameday;
-    @Bind(R.id.gametime)
+    @BindView(R.id.gametime)
     TextView gametime;
-    @Bind(R.id.period)
+    @BindView(R.id.period)
     TextView period;
-    @Bind(R.id.time_left)
+    @BindView(R.id.time_left)
     TextView timeLeft;
-    @Bind(R.id.status)
+    @BindView(R.id.status)
     TextView status;
-    @Bind(R.id.home_img)
+    @BindView(R.id.home_img)
     ImageView homeImg;
-    @Bind(R.id.name_home)
+    @BindView(R.id.name_home)
     TextView nameHome;
-    @Bind(R.id.city_home)
+    @BindView(R.id.city_home)
     TextView cityHome;
-    @Bind(R.id.score_home)
+    @BindView(R.id.score_home)
     TextView scoreHome;
-    @Bind(R.id.playbyplay)
+    @BindView(R.id.playbyplay)
     RecyclerView playbyplay;
-    @Bind(R.id.home_team_name_cs)
+    @BindView(R.id.home_team_name_cs)
     TextView homeTeamNameCs;
-    @Bind(R.id.PPGH)
+    @BindView(R.id.PPGH)
     TextView PPGH;
-    @Bind(R.id.RPGH)
+    @BindView(R.id.RPGH)
     TextView RPGH;
-    @Bind(R.id.APGH)
+    @BindView(R.id.APGH)
     TextView APGH;
-    @Bind(R.id.OPPGH)
+    @BindView(R.id.OPPGH)
     TextView OPPGH;
-    @Bind(R.id.away_team_name_cs)
+    @BindView(R.id.away_team_name_cs)
     TextView awayTeamNameCs;
-    @Bind(R.id.PPGA)
+    @BindView(R.id.PPGA)
     TextView PPGA;
-    @Bind(R.id.RPGA)
+    @BindView(R.id.RPGA)
     TextView RPGA;
-    @Bind(R.id.APGA)
+    @BindView(R.id.APGA)
     TextView APGA;
-    @Bind(R.id.OPPGA)
+    @BindView(R.id.OPPGA)
     TextView OPPGA;
-    @Bind(R.id.commonStatsContainer)
+    @BindView(R.id.commonStatsContainer)
     LinearLayout commonStatsContainer;
     private GamesAdapter gamesAdapterAway;
 
     private ArrayAdapter<String> injuriesHomeA;
     private ArrayAdapter<String> injuriesAwayA;
+    private Unbinder unbinder;
+    private YouTubePlayerSupportFragment frag;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -325,33 +334,35 @@ public class DetailFeedFragment extends Fragment implements DetailFeedView, Swip
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_game_detail, container, false);
-        //Log.d(TAG, "status:" + gameStatus);
+        Log.d(TAG, "status:" + gameStatus);
 
-        getInfo();
+        unbinder = ButterKnife.bind(this, rootView);
 
-        ButterKnife.bind(this, rootView);
         return rootView;
     }
 
     private void getInfo() {
 
-        if (!gameStatus.equals("1")) {
+        /*if (!gameStatus.equals("1")) {
             presenter.getGameStats(gameid);
             presenter.getPlaybyPlay(gameid);
             presenter.getInjuryReport(homeC.toUpperCase(), awayC.toUpperCase());
             presenter.getOdds();
-        } else {
-            presenter.getCommonHomeStats(homeid);
-            presenter.getCommonAwayStats(awayid);
-            presenter.getHomeStats(homeid);
-            presenter.getAwayStats(awayid);
-            presenter.getGamesHome(homeid);
-            presenter.getGamesAway(awayid);
-            presenter.getInjuryReport(homeC.toUpperCase(), awayC.toUpperCase());
-            presenter.getOdds();
-            presenter.getRecord(gameid);
-        }
+        } else {*/
+        presenter.getCommonHomeStats(homeid);
 
+        presenter.getCommonAwayStats(awayid);
+        presenter.getHomeStats(homeid);
+        presenter.getAwayStats(awayid);
+        presenter.getGamesHome(homeid);
+        presenter.getGamesAway(awayid);
+        presenter.getInjuryReport(homeC.toUpperCase(), awayC.toUpperCase());
+        presenter.getOdds();
+        presenter.getRecord(gameid);
+
+        frag =
+                (YouTubePlayerSupportFragment) getChildFragmentManager().findFragmentById(R.id.youtube_fragment);
+        frag.initialize(BuildConfig.YOUTUBE_API, this);
     }
 
     @Override
@@ -382,12 +393,14 @@ public class DetailFeedFragment extends Fragment implements DetailFeedView, Swip
         if (home_img != null) {
             showImages(home_img, away_img);
         }
+
+        getInfo();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+        unbinder.unbind();
         presenter.onDestroy();
     }
 
@@ -904,4 +917,18 @@ public class DetailFeedFragment extends Fragment implements DetailFeedView, Swip
             swipeDetails.setRefreshing(false);
         }
     }
+
+    @Override
+    public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player, boolean b) {
+            if (!b) {
+                player.cueVideo("L2KR8jUD_4g");//("wKJ9KzGQq0w");
+            }
+
+    }
+
+    @Override
+    public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
+
+    }
+
 }

@@ -137,9 +137,29 @@ public class DetailRepositoryImpl implements DetailRepository {
 
     @Override
     public void getHomeCommonStats(String teamid) {
-        //Log.d(TAG,"commonhomestats:"+teamid);
+        Log.d(TAG,"commonhomestats:"+teamid+" "+NBA_SEASON);
         Call<CommonStats> call = statsService.getCommonStats(common_stats,teamid,"00","Regular Season",NBA_SEASON);
-        call.enqueue(CommonCallBack(DetailEvent.COMMON_STATS_HOME));
+        //call.enqueue(CommonCallBack(DetailEvent.COMMON_STATS_HOME));
+        final int type = DetailEvent.COMMON_STATS_HOME;
+        call.enqueue(new Callback<CommonStats>() {
+            @Override
+            public void onResponse(Call<CommonStats> call, Response<CommonStats> response) {
+                if(response.isSuccessful()){
+                    Log.d(TAG,"commonCallback Success");
+                    postCS(null,type,response.body(),true);
+                }
+                else {
+                    Log.d(TAG,"commonCallback ERROR:"+response.raw());
+                    postCS("not successfull",type,null,false);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CommonStats> call, Throwable t) {
+                Log.d(TAG,"commonCallback Fail ERROR "+t.getMessage()+" ");
+                postCS(t.getMessage(),type,null,false);
+            }
+        });
     }
 
     private Callback<CommonStats> CommonCallBack(final int type){
@@ -147,15 +167,18 @@ public class DetailRepositoryImpl implements DetailRepository {
             @Override
             public void onResponse(Call<CommonStats> call, Response<CommonStats> response) {
                 if(response.isSuccessful()){
+                    Log.d(TAG,"commonCallback Success");
                     postCS(null,type,response.body(),true);
                 }
                 else {
+                    Log.d(TAG,"commonCallback ERROR");
                     postCS("not successfull",type,null,false);
                 }
             }
 
             @Override
             public void onFailure(Call<CommonStats> call, Throwable t) {
+                Log.d(TAG,"commonCallback ERROR");
                 postCS(t.getMessage(),type,null,false);
             }
         };
@@ -169,10 +192,10 @@ public class DetailRepositoryImpl implements DetailRepository {
         event.setCommonStats(commonStats);
 
         if(error!=null){
-            //Log.d(TAG,"about to send event:"+type+" "+success+" error:"+error);
+            Log.d(TAG,"about to send event:"+type+" "+success+" error:"+error);
         }
         else{
-            //Log.d(TAG,"about to send event:"+type+" "+success);
+            Log.d(TAG,"about to send event:"+type+" "+success);
         }
 
         eventBus.post(event);
@@ -181,7 +204,7 @@ public class DetailRepositoryImpl implements DetailRepository {
 
     @Override
     public void getAwayCommonStats(String teamid) {
-        //Log.d(TAG,"commonAwaystats:"+teamid);
+        Log.d(TAG,"commonAwaystats:"+teamid);
         Call<CommonStats> call = statsService.getCommonStats(common_stats,teamid,"00","Regular Season",NBA_SEASON);
         call.enqueue(CommonCallBack(DetailEvent.COMMON_STATS_AWAY));
     }
@@ -405,6 +428,12 @@ public class DetailRepositoryImpl implements DetailRepository {
         event.setSize(size);
 
         //Log.d(TAG,"about to send event:"+type+" "+success);
+        if(error!=null){
+            Log.d(TAG,"about to send event:"+type+" "+success+" error:"+error);
+        }
+        else{
+            Log.d(TAG,"about to send event:"+type+" "+success);
+        }
 
         eventBus.post(event);
     }
@@ -430,10 +459,10 @@ public class DetailRepositoryImpl implements DetailRepository {
         event.setStatsResponse(statsResponse);
 
         if(message!=null){
-            //Log.d(TAG,"about to send event:"+statsType+" "+success+" error:"+message);
+            Log.d(TAG,"about to send event:"+statsType+" "+success+" error:"+message);
         }
         else{
-            //Log.d(TAG,"about to send event:"+statsType+" "+success);
+            Log.d(TAG,"about to send event:"+statsType+" "+success);
         }
         eventBus.post(event);
 
@@ -466,10 +495,10 @@ public class DetailRepositoryImpl implements DetailRepository {
         event.setCommonStats(commonStats);
 
         if(error!=null){
-            //Log.d(TAG,"about to send event:"+type+" "+success+" error:"+error);
+            Log.d(TAG,"about to send event:"+type+" "+success+" error:"+error);
         }
         else{
-            //Log.d(TAG,"about to send event:"+type+" "+success);
+            Log.d(TAG,"about to send event:"+type+" "+success);
         }
 
         eventBus.post(event);

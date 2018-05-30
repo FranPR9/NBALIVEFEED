@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
 
 import fpr9.com.nbalivefeed.entities.ResponseInterceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -22,10 +23,23 @@ public class StatsClient {
         Calendar c = Calendar.getInstance();
         String BASE_URL = "https://neulionmdnyc-a.akamaihd.net/fs/nba/feeds_s2012/stats/"+c.get(Calendar.YEAR)+"/boxscore/";
         Log.d("StatsClient",BASE_URL);
+
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+// set your desired log level
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+        logging.setLevel(HttpLoggingInterceptor.Level.HEADERS);
+
+        //OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+// add your other interceptors …
+
+// add logging as last interceptor
+        //httpClient.addInterceptor(logging);  // <-- this is the important line!
+
         final OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .readTimeout(60, TimeUnit.SECONDS)
                 .connectTimeout(60, TimeUnit.SECONDS)
                 .addInterceptor(new ResponseInterceptor())
+                .addInterceptor(logging)
                 .build();
 
 

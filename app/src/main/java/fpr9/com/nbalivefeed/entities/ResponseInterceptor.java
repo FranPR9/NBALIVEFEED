@@ -43,6 +43,8 @@ public class ResponseInterceptor implements Interceptor {
                 stringJson = stringJson.replace("[[","[");
                 stringJson = stringJson.replace("]]","]");
                 stringJson = stringJson.replace("]]","]");
+                stringJson = stringJson.substring(0,stringJson.indexOf(",{\"name\":\"AvailableSeasons\""));
+                stringJson = stringJson+"]}";
             }
             if(stringJson.contains("\"rowSet\":[[\"Players\"")){
                 stringJson = stringJson.replace("[[","[");
@@ -118,7 +120,8 @@ public class ResponseInterceptor implements Interceptor {
 
     private String playerStatsReformat(String complete) {
         int index = complete.indexOf("\"rowSet\":[\"Players\"");
-        String headers ="\"GROUP_SET\",\"PLAYER_ID\",\"PLAYER_NAME\",\"GP\",\"W\",\"L\",\"W_PCT\",\"MIN\",\"FGM\",\"FGA\",\"FG_PCT\",\"FG3M\",\"FG3A\",\"FG3_PCT\",\"FTM\",\"FTA\",\"FT_PCT\",\"OREB\",\"DREB\",\"REB\",\"AST\",\"TOV\",\"STL\",\"BLK\",\"BLKA\",\"PF\",\"PFD\",\"PTS\",\"PLUS_MINUS\",\"DD2\",\"TD3\"";
+        //String headers ="\"GROUP_SET\",\"PLAYER_ID\",\"PLAYER_NAME\",\"GP\",\"W\",\"L\",\"W_PCT\",\"MIN\",\"FGM\",\"FGA\",\"FG_PCT\",\"FG3M\",\"FG3A\",\"FG3_PCT\",\"FTM\",\"FTA\",\"FT_PCT\",\"OREB\",\"DREB\",\"REB\",\"AST\",\"TOV\",\"STL\",\"BLK\",\"BLKA\",\"PF\",\"PFD\",\"PTS\",\"PLUS_MINUS\",\"DD2\",\"TD3\"";
+        String headers ="\"GROUP_SET\",\"PLAYER_ID\",\"PLAYER_NAME\",\"GP\",\"W\",\"L\",\"W_PCT\",\"MIN\",\"FGM\",\"FGA\",\"FG_PCT\",\"FG3M\",\"FG3A\",\"FG3_PCT\",\"FTM\",\"FTA\",\"FT_PCT\",\"OREB\",\"DREB\",\"REB\",\"AST\",\"TOV\",\"STL\",\"BLK\",\"BLKA\",\"PF\",\"PFD\",\"PTS\",\"PLUS_MINUS\",\"NBA_FANTASY_PTS\",\"DD2\",\"TD3\",\"GP_RANK\",\"W_RANK\",\"L_RANK\",\"W_PCT_RANK\",\"MIN_RANK\",\"FGM_RANK\",\"FGA_RANK\",\"FG_PCT_RANK\",\"FG3M_RANK\",\"FG3A_RANK\",\"FG3_PCT_RANK\",\"FTM_RANK\",\"FTA_RANK\",\"FT_PCT_RANK\",\"OREB_RANK\",\"DREB_RANK\",\"REB_RANK\",\"AST_RANK\",\"TOV_RANK\",\"STL_RANK\",\"BLK_RANK\",\"BLKA_RANK\",\"PF_RANK\",\"PFD_RANK\",\"PTS_RANK\",\"PLUS_MINUS_RANK\",\"NBA_FANTASY_PTS_RANK\",\"DD2_RANK\",\"TD3_RANK\"";
         String[] headersArray = headers.split(",");
         String oldStr = complete.substring(0,index);
         String newstr = complete.substring(index);

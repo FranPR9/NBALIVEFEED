@@ -9,23 +9,24 @@ buildscript {
 }
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
+//apply plugin: 'com.neenbedankt.android-apt'
 
 repositories {
     maven { url 'https://maven.fabric.io/public' }
 }
 
-apply plugin: 'com.neenbedankt.android-apt'
+//apply plugin: 'com.neenbedankt.android-apt'
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion '25.0.0'
+    compileSdkVersion 27
+    buildToolsVersion '27.0.3'
 
     defaultConfig {
         applicationId "fpr9.com.nbalivefeed"
         minSdkVersion 19
-        targetSdkVersion 24
-        versionCode 3
-        versionName "1.2"
+        targetSdkVersion 27
+        versionCode 5
+        versionName "1.4"
     }
     buildTypes {
         release {
@@ -41,7 +42,7 @@ android {
             buildConfigField "String", "img_url", img_url
             buildConfigField "String", "player_url", player_url
             buildConfigField "String", "TWITTER_KEY", TWITTER_KEY
-            buildConfigField "String", "TWITTER_SECRET", TWITTER_SECRET
+            buildConfigField "String", "YOUTUBE_API", YOUTUBE_API
         }
         debug{
             buildConfigField "String", "base_url", BASE_URL
@@ -55,32 +56,43 @@ android {
             buildConfigField "String", "player_url", player_url
             buildConfigField "String", "TWITTER_KEY", TWITTER_KEY
             buildConfigField "String", "TWITTER_SECRET", TWITTER_SECRET
+            buildConfigField "String", "YOUTUBE_API", YOUTUBE_API
         }
     }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:24.2.1'
-    compile 'com.android.support:design:24.2.1'
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    testImplementation 'junit:junit:4.12'
+    implementation "com.android.support:appcompat-v7:$rootProject.ext.supportVersion"
+    implementation "com.android.support:design:$rootProject.ext.supportVersion"
+    annotationProcessor "com.google.dagger:dagger-compiler:$rootProject.ext.daggerVersion"
+    implementation "com.squareup.retrofit2:converter-gson:$rootProject.ext.retrofitVersion"
+    implementation "com.squareup.retrofit2:retrofit:$rootProject.ext.retrofitVersion"
+    implementation "com.github.bumptech.glide:glide:$rootProject.ext.glideVersion"
+    //implementation "com.jakewharton:butterknife:$rootProject.ext.butterknifeVersion"
+    implementation "com.jakewharton:butterknife:$rootProject.ext.butterknifeVersion"
+    annotationProcessor "com.jakewharton:butterknife-compiler:$rootProject.ext.butterknifeVersion"
+    //implementation "-butterknife:$rootProject.ext.butterknifeVersion"
+    implementation "org.greenrobot:eventbus:$rootProject.ext.eventbusVersion"
+    //apt "com.google.dagger:dagger-implementationr:$rootProject.ext.daggerVersion"
+    implementation "javax.annotation:jsr250-api:$rootProject.ext.jsr250Version"
+    implementation "com.google.dagger:dagger:$rootProject.ext.daggerVersion"
+    annotationProcessor "com.github.Raizlabs.DBFlow:dbflow-processor:$rootProject.ext.dbflowVersion"
+    //apt "com.github.Raizlabs.DBFlow:dbflow-processor:$rootProject.ext.dbflowVersion"
+    implementation "com.github.Raizlabs.DBFlow:dbflow-core:$rootProject.ext.dbflowVersion"
+    implementation "com.github.Raizlabs.DBFlow:dbflow:$rootProject.ext.dbflowVersion"
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.8.0'
 
-    compile "com.squareup.retrofit2:converter-gson:$rootProject.ext.retrofitVersion"
-    compile "com.squareup.retrofit2:retrofit:$rootProject.ext.retrofitVersion"
-    compile "com.github.bumptech.glide:glide:$rootProject.ext.glideVersion"
-    compile "com.jakewharton:butterknife:$rootProject.ext.butterknifeVersion"
-    compile "org.greenrobot:eventbus:$rootProject.ext.eventbusVersion"
-    apt "com.google.dagger:dagger-compiler:$rootProject.ext.daggerVersion"
-    compile "javax.annotation:jsr250-api:$rootProject.ext.jsr250Version"
-    compile "com.google.dagger:dagger:$rootProject.ext.daggerVersion"
-    apt "com.github.Raizlabs.DBFlow:dbflow-processor:$rootProject.ext.dbflowVersion"
-    compile "com.github.Raizlabs.DBFlow:dbflow-core:$rootProject.ext.dbflowVersion"
-    compile "com.github.Raizlabs.DBFlow:dbflow:$rootProject.ext.dbflowVersion"
+    implementation "com.android.support:cardview-v7:$rootProject.ext.supportVersion"
+    //implementation('com.twitter.sdk.android:twitter-core:2.3.0@aar') {
+    //    transitive = true;
+    //}
 
-    compile "com.android.support:cardview-v7:24.2.1"
-    compile('com.twitter.sdk.android:twitter:2.1.1@aar') {
-        transitive = true;
-    }
+    // Include all the Twitter APIs
+    implementation 'com.twitter.sdk.android:twitter:3.1.1'
+    implementation files('libs/YouTubeAndroidPlayerApi.jar')
+
 
 
 }

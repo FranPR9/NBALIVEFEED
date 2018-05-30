@@ -10,6 +10,7 @@ import fpr9.com.nbalivefeed.entities.RecordContainer;
 import fpr9.com.nbalivefeed.entities.StatsResponse;
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Headers;
 import retrofit2.http.Query;
 import retrofit2.http.Url;
 
@@ -36,6 +37,16 @@ public interface StatsService {
     @GET
     Call<PlaysResponse> getPbP(@Url String url, @Query("t") String timestamp);
 
+    //"Upgrade-Insecure-Requests:1",
+
+    @Headers({
+            "Accept:text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
+            "Accept-Language:es-ES,es;q=0.8,en;q=0.6",
+            "Cache-Control:max-age=0",
+            "Connection:keep-alive",
+            "Host:stats.nba.com",
+            "User-Agent:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36"
+    })
     @GET
     Call<CommonStats> getCommonStats(@Url String url, @Query("TeamID") String teamid
                                                     , @Query("LeagueID") String leagueid
@@ -43,6 +54,14 @@ public interface StatsService {
                                                     , @Query("season") String season
     );
 
+    @Headers({
+            "Accept:text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
+            "Accept-Language:es-ES,es;q=0.8,en;q=0.6",
+            "Cache-Control:max-age=0",
+            "Connection:keep-alive",
+            "Host:stats.nba.com",
+            "User-Agent:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36"
+    })
     @GET
     Call<CommonStats> getStats(@Url String url, @Query("TeamID") String teamid
                                 , @Query("DateFrom") String datefrom
